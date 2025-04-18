@@ -1,0 +1,536 @@
+
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>회사 이름 - 기업 소개</title>
+<style>
+    /* 
+* : 모든 요소에 적용
+margin: 0 → 바깥 여백 제거
+padding: 0 → 안쪽 여백 제거
+box-sizing: border-box → 요소 크기를 border까지 포함하여 계산 (기본값: content-box)
+다른 옵션: box-sizing: content-box (padding, border 제외한 내용영역만 계산)
+샘플: div { box-sizing: content-box; padding: 10px; }
+*/
+* { margin: 0; padding: 0; box-sizing: border-box; }
+    /* 
+html { scroll-behavior: smooth; }
+scroll-behavior: smooth → 앵커 이동 시 부드럽게 스크롤됨
+기본값: auto (즉시 이동)
+샘플: html { scroll-behavior: auto; } → 부드럽지 않게 이동
+*/
+html { scroll-behavior: smooth; }
+    /*
+body 스타일 설정
+font-family → 폰트 종류 설정
+line-height → 줄 간격 설정
+color → 전체 글자색 지정
+background → 배경색
+*/
+body {
+      font-family: 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f8f9fa;
+    }
+    header {
+      background: #0d1b2a;
+      color: white;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky; /* 요소가 화면 스크롤 시 고정됨. 대안: fixed(항상 고정), absolute(부모기준) */
+      top: 0;
+      z-index: 100;
+    }
+    header img { height: 40px; }
+    nav a {
+      margin-left: 20px;
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav a:hover { color: #e63946; }
+
+    .hero {
+      background: linear-gradient(to right, #1b263b, #415a77);
+      color: white;
+      text-align: center;
+      padding: 100px 20px 80px;
+    }
+    .hero h2 { font-size: 38px; margin-bottom: 20px; }
+    .hero p { font-size: 18px; margin-bottom: 30px; }
+    .hero a {
+      display: inline-block;
+      background: #e63946;
+      color: white;
+      padding: 12px 30px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .hero a:hover {
+      background: #c9283a;
+      animation: pulse 0.6s ease;
+    }
+
+    section {
+      padding: 60px 40px;
+      max-width: 960px;
+      margin: auto;
+    }
+    section h3 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #0d1b2a;
+    }
+    .services {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    .service {
+      flex: 1 1 250px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .service img {
+      width: 60px;
+      margin-bottom: 15px;
+    }
+    #contact p { font-size: 16px; line-height: 1.8; }
+    footer {
+      background: #0d1b2a;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+    }
+
+    /* 애니메이션 */
+    .hidden { opacity: 0; transform: translateY(40px); transition: all 0.8s ease; }
+    .fade-left.hidden { transform: translateX(-40px); }
+    .fade-right.hidden { transform: translateX(40px); }
+    .show { opacity: 1 !important; transform: none !important; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+  
+/* 주요 사업 영역 3D 스타일 */
+.business-section {
+  perspective: 1000px;
+  height: 500px;
+  position: relative;
+  padding: 80px 20px;
+}
+.business-section h3 {
+  font-size: 28px;
+  margin-bottom: 40px;
+  color: #0d1b2a;
+}
+.carousel {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  animation: spin 20s linear infinite;
+}
+.carousel-item {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  line-height: 1.4;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateY(var(--angle)) translateZ(300px);
+  transition: transform 0.5s, opacity 0.5s;
+  opacity: 0.7;
+}
+.carousel-item:hover {
+  transform: translate(-50%, -50%) rotateY(var(--angle)) translateZ(300px) scale(1.1);
+  opacity: 1;
+  z-index: 10;
+}
+@keyframes spin {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(360deg); }
+}
+
+
+
+:root {
+  --bg-color: #f9f9f9;
+  --text-color: #333;
+  --section-bg: #fff;
+  --accent-color: #e63946;
+}
+body.dark {
+  --bg-color: #121212;
+  --text-color: #f1f1f1;
+  --section-bg: #1c1c1c;
+  --accent-color: #ff6b81;
+}
+
+  --bg-color: #f9f9f9;
+  --text-color: #333;
+  --section-bg: #fff;
+}
+body.dark {
+  --bg-color: #121212;
+  --text-color: #eee;
+  --section-bg: #1e1e1e;
+}
+/*
+body 스타일 설정
+font-family → 폰트 종류 설정
+line-height → 줄 간격 설정
+color → 전체 글자색 지정
+background → 배경색
+*/
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+section, .service, .carousel-item {
+  background: var(--section-bg);
+}
+.business-section {
+  margin-bottom: 200px; /* 하단 섹션과 겹치지 않도록 여백 추가 */
+}
+.toggle-btn {
+  position: fixed;
+  top: 100px;
+  right: 5px;
+  z-index: 200;
+  background: #444;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+.toggle-btn:hover {
+  opacity: 1;
+}
+
+
+.carousel {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  animation: spin 30s linear infinite;
+}
+.carousel-item {
+  position: absolute;
+  width: clamp(140px, 15vw, 180px);
+  height: clamp(140px, 15vw, 180px);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateY(var(--angle)) translateZ(360px);
+  background: var(--section-bg);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.5s, opacity 0.5s;
+  text-align: center;
+  padding: 12px;
+}
+.carousel-item .content {
+  opacity: 1;
+  transform: scale(0.9);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.carousel-item:hover {
+  transform: translate(-50%, -50%) rotateY(var(--angle)) translateZ(360px) scale(1.2);
+  opacity: 1;
+  z-index: 10;
+}
+.carousel-item:hover .content {
+  opacity: 1;
+  transform: scale(1);
+}
+.carousel-item h4 {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: var(--text-color);
+}
+.carousel-item p {
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+
+.carousel-item {
+  backdrop-filter: blur(8px);
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.carousel-item:hover {
+  box-shadow: 0 0 20px var(--accent-color), 0 0 40px var(--accent-color);
+}
+
+
+section, section h2, section h3, section p, section h4 {
+  color: var(--text-color);
+}
+
+.toggle-section {
+  background: var(--section-bg);
+  text-align: center;
+  padding: 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+section {
+  margin-bottom: 60px;
+  border-radius: 12px;
+  box-shadow: 0 0 16px rgba(0,0,0,0.05);
+  padding: 60px 30px;
+}
+.business-section {
+  background: var(--section-bg);
+  margin-bottom: 120px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.08);
+}
+
+
+section {
+  margin-bottom: 80px;
+  border-radius: 16px;
+  padding: 80px 30px;
+  color: var(--text-color);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+}
+section:nth-of-type(1) {
+  background: linear-gradient(135deg, #fefcea, #f1da36);
+}
+section:nth-of-type(2) {
+  background: linear-gradient(135deg, #e3f0ff, #c1d9ff);
+}
+section.business-section {
+  background: radial-gradient(circle at center, #dfe9f3, #ffffff);
+}
+section:nth-of-type(4) {
+  background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+}
+section:nth-of-type(5) {
+  background: linear-gradient(to right, #fceabb, #f8b500);
+}
+
+
+section {
+  background: linear-gradient(145deg, #e6ecf3, #f4f7fa);
+}
+body.dark section {
+  background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+}
+
+.toggle-box {
+  padding: 20px;
+  background: var(--section-bg);
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  margin-bottom: 60px;
+}
+.business-section {
+  margin-bottom: 240px;
+}
+
+
+section {
+  background: none !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 60px;
+  padding: 60px 30px;
+}
+body.dark section {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+
+.dna-container {
+  flex: 0 0 auto;
+  width: 400px;
+  height: 200px;
+  position: relative;
+}
+.dna-web textPath {
+  animation: flow 16s linear infinite;
+}
+.dna-container:hover textPath {
+  animation-play-state: paused;
+}
+@keyframes flow {
+  0% { startOffset: 100%; }
+  100% { startOffset: 0%; }
+}
+</style>
+<script defer="">
+    document.addEventListener("DOMContentLoaded", function () {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+
+      document.querySelectorAll('.fade-up, .fade-left, .fade-right').forEach(el => {
+        el.classList.add('hidden');
+        observer.observe(el);
+      });
+    });
+  </script>
+</head>
+<body>
+<!-- removed toggle box -->
+<!-- <div class="toggle-btn" onclick="document.body.classList.toggle('dark')">🌓 다크모드</div> -->
+<!-- <div class="toggle-section"> -->
+<!-- <div class="toggle-btn" onclick="document.body.classList.toggle('dark')" style="display:inline-block; background:var(--accent-color); color:#fff; padding:10px 20px; border-radius:8px;">🌓 다크모드</div>
+</div> -->
+<!-- <div class="toggle-btn" onclick="document.body.classList.toggle('dark')" style="position:absolute; top:50%; right:30px; transform:translateY(-50%);">🌓 다크모드</div> -->
+<header>
+<a href="#"><img alt="로고" src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" style="cursor:pointer"/></a>
+<nav>
+<div>
+<a href="#" onclick="document.body.classList.toggle('dark')">🌓</a>
+<a href="#about">회사소개</a>
+<a href="#service">서비스</a>
+<a href="#contact">연락처</a>
+</div>
+</nav>
+</header>
+<section class="hero">
+<h2>미래를 함께하는 혁신 기업</h2>
+<p>기술과 사람을 연결하는 가치, 그것이 우리의 철학입니다.</p>
+<a href="#contact">문의하기</a>
+</section>
+<section class="fade-left" id="about" style="display: flex; flex-direction: row; gap: 40px; align-items: center;"><h3>회사소개</h3><div>
+2015년 창립 이래, 우리는 기술 혁신을 기반으로 다양한 디지털 플랫폼을 개발해왔습니다.
+2017년 AI 연구소 설립을 시작으로, 2018년 UX 전문 조직과의 협업을 통한 사용자 경험 강화를 달성하였습니다.
+2019~2020년에는 글로벌 시장으로 진출, 북미와 유럽의 클라이언트들과 협업을 확대했고,
+2021년에는 데이터 기반 분석 플랫폼을 런칭하여 3만 이상의 사용자 확보에 성공했습니다.
+2022년부터 현재까지는 클라우드 인프라와 보안 솔루션에 집중하고 있으며,
+2024년 기준 60명 이상의 인력과 함께 지속 성장하고 있습니다.
+</div>
+</section><section id="capabilities"><h3>우리가 하는 일</h3><div style="position:relative; overflow:hidden; height:500px;"><div class="carousel">
+<div class="carousel-item" style="--angle: 0deg">
+<div class="content">
+<h4>플랫폼 개발</h4>
+<p>맞춤형 웹/모바일 플랫폼 기획 및 구축 서비스</p>
+</div>
+</div>
+<div class="carousel-item" style="--angle: 40deg">
+<div class="content">
+<h4>AI 솔루션</h4>
+<p>비즈니스 자동화를 위한 인공지능 기술 개발</p>
+</div>
+</div>
+<div class="carousel-item" style="--angle: 80deg">
+<div class="content">
+<h4>UX 디자인</h4>
+<p>사용자 중심의 인터페이스 설계 및 테스트</p>
+</div>
+</div>
+<div class="carousel-item" style="--angle: 120deg">
+<div class="content">
+<h4>IT 컨설팅</h4>
+<p>IT 전략 수립부터 실행까지 전문가 컨설팅</p>
+</div>
+</div>
+<div class="carousel-item" style="--angle: 160deg">
+<div class="content">
+<h4>데이터 분석</h4>
+<p>데이터 기반 인사이트 도출 및 시각화</p>
+</div>
+</div>
+<div class="carousel-item" style="--angle: 200deg">
+<div class="content">
+<h4>브랜딩 전략</h4>
+<p>브랜드 가치 창출을 위한 전략 수립</p>
+</div>
+</div>
+<div class="carousel-item" style="--angle: 240deg">
+<div class="content">
+<h4>글로벌 마케팅</h4>
+<p>글로벌 시장 타겟 맞춤 마케팅 솔루션</p>
+</div>
+</div>
+<div class="carousel-item" style="--angle: 280deg">
+<div class="content">
+<h4>보안 솔루션</h4>
+<p>기업 보안을 위한 최신 보안 시스템 구축</p>
+</div>
+</div>
+<div class="carousel-item" style="--angle: 320deg">
+<div class="content">
+<h4>클라우드 인프라</h4>
+<p>확장 가능한 클라우드 환경 설계 및 운영</p>
+</div>
+</div>
+</div></div></section>
+<section class="fade-right" id="service">
+<h3>주요 서비스</h3>
+<div class="services">
+<div class="service">
+<img alt="디지털" src="https://cdn-icons-png.flaticon.com/512/2489/2489735.png"/>
+<h4>디지털 솔루션</h4>
+<p>기업의 디지털 전환을 위한 맞춤형 솔루션을 제공합니다.</p>
+</div>
+<div class="service">
+<img alt="컨설팅" src="https://cdn-icons-png.flaticon.com/512/2645/2645897.png"/>
+<h4>컨설팅</h4>
+<p>전문가들과 함께 사업 전략과 실행 로드맵을 설계합니다.</p>
+</div>
+<div class="service">
+<img alt="개발" src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png"/>
+<h4>플랫폼 개발</h4>
+<p>고객의 요구에 최적화된 플랫폼을 기획하고 구축합니다.</p>
+</div>
+</div>
+</section>
+<section class="fade-up" id="contact">
+<h3>연락처</h3>
+<p>이메일: hello@example.com<br/>
+       전화: 02-1234-5678<br/>
+       주소: 서울특별시 강남구 테헤란로 123</p>
+</section>
+<footer>
+    © 2025 회사 이름. All rights reserved.
+  </footer>
+<script>
+document.querySelectorAll('.carousel-item').forEach(item => {
+  item.addEventListener('mouseenter', () => {
+    const carousel = item.closest('.carousel');
+    carousel.style.animationPlayState = 'paused';
+    carousel.style.transform = `rotateY(${-item.style.getPropertyValue('--angle').replace('deg','')}deg)`;
+  });
+  item.addEventListener('mouseleave', () => {
+    const carousel = item.closest('.carousel');
+    carousel.style.animationPlayState = 'running';
+    carousel.style.transform = '';
+  });
+});
+</script>
+</body>
+</html>
